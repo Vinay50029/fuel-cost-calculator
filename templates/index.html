@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Fuel Cost Comparison Tool</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Fuel Cost Comparison Tool</h1>
+        <form method="POST">
+            <label for="distance">Enter Distance (in km):</label>
+            <input type="number" id="distance" name="distance" required>
+            
+            <label for="hybrid_split">Enter % of Distance Covered by Fuel (0 to 100):</label>
+            <input type="number" id="hybrid_split" name="hybrid_split" min="0" max="100" required>
+
+            <button type="submit">Calculate</button>
+        </form>
+
+        {% if lowest_cost_fuel %}
+        <h2>Results for {{ distance }} km</h2>
+        <h3>Fuel Prices</h3>
+        <ul>
+            <li>Petrol: ₹{{ prices['petrol'] }}</li>
+            <li>Diesel: ₹{{ prices['diesel'] }}</li>
+            <li>CNG: ₹{{ prices['cng'] }}</li>
+            <li>LPG: ₹{{ prices['lpg'] }}</li>
+            <li>Electricity: ₹{{ prices['electricity'] }}</li>
+        </ul>
+
+        <h3>Cost Estimates</h3>
+        <ul>
+            <li>Petrol Cost: ₹{{ petrol_cost }} (Needed: {{ petrol_fuel_needed }} liters)</li>
+            <li>Diesel Cost: ₹{{ diesel_cost }} (Needed: {{ diesel_fuel_needed }} liters)</li>
+            <li>CNG Cost: ₹{{ cng_cost }} (Needed: {{ cng_fuel_needed }} kg)</li>
+            <li>LPG Cost: ₹{{ lpg_cost }} (Needed: {{ lpg_fuel_needed }} kg)</li>
+            <li>Electric Vehicle Cost: ₹{{ ev_cost }} (Energy Needed: {{ ev_energy_needed }} kWh)</li>
+            <li>Hybrid Petrol Cost: ₹{{ hybrid_petrol_cost }} (Fuel Needed: {{ hybrid_petrol_fuel_needed }} liters, Energy Needed: {{ hybrid_petrol_energy_needed }} kWh)</li>
+            <li>Hybrid Diesel Cost: ₹{{ hybrid_diesel_cost }} (Fuel Needed: {{ hybrid_diesel_fuel_needed }} liters, Energy Needed: {{ hybrid_diesel_energy_needed }} kWh)</li>
+            <li>Hybrid CNG Cost: ₹{{ hybrid_cng_cost }} (Fuel Needed: {{ hybrid_cng_fuel_needed }} kg, Energy Needed: {{ hybrid_cng_energy_needed }} kWh)</li>
+            <li>Hybrid LPG Cost: ₹{{ hybrid_lpg_cost }} (Fuel Needed: {{ hybrid_lpg_fuel_needed }} kg, Energy Needed: {{ hybrid_lpg_energy_needed }} kWh)</li>
+        </ul>
+
+        <h3>Lowest Cost Option</h3>
+        <p>The lowest cost option is {{ lowest_cost_fuel }} with a cost of ₹{{ lowest_cost_value }}.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
