@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'python:3.9'
+            args '-v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker:ro'
+        }
+    }
     
     environment {
         DOCKER_IMAGE = 'fuel-cost-calculator'
@@ -18,8 +23,6 @@ pipeline {
             steps {
                 script {
                     sh '''
-                        python3 -m venv venv
-                        source venv/bin/activate
                         pip install -r requirements.txt
                     '''
                 }
@@ -30,7 +33,6 @@ pipeline {
             steps {
                 script {
                     sh '''
-                        source venv/bin/activate
                         # Add your linting commands here
                         # python -m flake8 app.py
                         # Add your test commands here
@@ -45,7 +47,6 @@ pipeline {
             steps {
                 script {
                     sh '''
-                        source venv/bin/activate
                         pip install safety
                         safety check
                     '''
@@ -130,7 +131,6 @@ pipeline {
                 // Cleanup
                 sh '''
                     docker system prune -f
-                    rm -rf venv
                 '''
             }
         }
