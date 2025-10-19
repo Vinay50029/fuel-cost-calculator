@@ -34,7 +34,10 @@ pipeline {
             steps {
                 script {
                     sh '''
-                        pip install -r requirements.txt
+                        python -m venv venv                # Create virtual environment
+                        source venv/bin/activate           # Activate venv
+                        pip install --upgrade pip          # Upgrade pip inside venv
+                        pip install -r requirements.txt   # Install your dependencies
                     '''
                 }
             }
@@ -44,10 +47,9 @@ pipeline {
             steps {
                 script {
                     sh '''
-                        # Add your linting commands here
-                        # python3 -m flake8 app.py
-                        # Add your test commands here
-                        # python3 -m pytest tests/
+                        source venv/bin/activate
+                        # python -m flake8 app.py
+                        # python -m pytest tests/
                         echo "Linting and testing completed"
                     '''
                 }
