@@ -19,7 +19,7 @@ pipeline {
                 script {
                     sh '''
                         apt-get update
-                        apt-get install -y python3 python3-pip python3-venv
+                        apt-get install -y python3-full python3-pip python3-venv
                     '''
                 }
             }
@@ -29,9 +29,7 @@ pipeline {
             steps {
                 script {
                     sh '''
-                        python3 -m venv venv
-                        . venv/bin/activate
-                        pip install -r requirements.txt
+                        python3 -m pip install --break-system-packages -r requirements.txt
                     '''
                 }
             }
@@ -41,11 +39,10 @@ pipeline {
             steps {
                 script {
                     sh '''
-                        . venv/bin/activate
                         # Add your linting commands here
-                        # python -m flake8 app.py
+                        # python3 -m flake8 app.py
                         # Add your test commands here
-                        # python -m pytest tests/
+                        # python3 -m pytest tests/
                         echo "Linting and testing completed"
                     '''
                 }
@@ -56,9 +53,8 @@ pipeline {
             steps {
                 script {
                     sh '''
-                        . venv/bin/activate
-                        pip install safety
-                        safety check
+                        python3 -m pip install --break-system-packages safety
+                        python3 -m safety check
                     '''
                 }
             }
@@ -141,7 +137,6 @@ pipeline {
                 // Cleanup
                 sh '''
                     docker system prune -f
-                    rm -rf venv
                 '''
             }
         }
