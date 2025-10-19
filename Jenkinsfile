@@ -29,7 +29,9 @@ pipeline {
             steps {
                 script {
                     sh '''
-                        python3 -m pip install -r requirements.txt
+                        python3 -m venv venv
+                        . venv/bin/activate
+                        pip install -r requirements.txt
                     '''
                 }
             }
@@ -39,6 +41,7 @@ pipeline {
             steps {
                 script {
                     sh '''
+                        . venv/bin/activate
                         # Add your linting commands here
                         # python -m flake8 app.py
                         # Add your test commands here
@@ -53,8 +56,9 @@ pipeline {
             steps {
                 script {
                     sh '''
-                        python3 -m pip install safety
-                        python3 -m safety check
+                        . venv/bin/activate
+                        pip install safety
+                        safety check
                     '''
                 }
             }
@@ -137,6 +141,7 @@ pipeline {
                 // Cleanup
                 sh '''
                     docker system prune -f
+                    rm -rf venv
                 '''
             }
         }
