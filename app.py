@@ -143,6 +143,11 @@ def index():
     return render_template("index.html")
 
 if __name__ == "__main__":
-    app.run(debug=True)
-    
-# to run code place "python app.py" in new terminal then hit enter
+    # Check if running in Docker container
+    import os
+    if os.getenv('FLASK_ENV') == 'production':
+        # Docker/Production mode
+        app.run(host='0.0.0.0', port=5000, debug=False)
+    else:
+        # Development mode
+        app.run(host='127.0.0.1', port=5000, debug=True)
