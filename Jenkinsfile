@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'python:3.9-slim'
+            args '--user root -v /var/run/docker.sock:/var/run/docker.sock'
+        }
+    }
     
     environment {
         DOCKER_IMAGE = 'fuel-cost-calculator'
@@ -14,12 +19,12 @@ pipeline {
             }
         }
         
-        stage('Setup Python') {
+        stage('Setup') {
             steps {
                 script {
                     sh '''
                         apt-get update
-                        apt-get install -y python3-full python3-pip python3-venv
+                        apt-get install -y curl docker.io
                     '''
                 }
             }
@@ -29,7 +34,7 @@ pipeline {
             steps {
                 script {
                     sh '''
-                        python3 -m pip install --break-system-packages -r requirements.txt
+                        pip install -r requirements.txt
                     '''
                 }
             }
@@ -53,8 +58,8 @@ pipeline {
             steps {
                 script {
                     sh '''
-                        python3 -m pip install --break-system-packages safety
-                        python3 -m safety check
+                        pip install safety
+                        safety check
                     '''
                 }
             }
